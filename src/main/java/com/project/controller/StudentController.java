@@ -6,8 +6,6 @@ import com.project.service.StudentServiceImpl;
 
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -69,9 +67,9 @@ public class StudentController {
   
   @GetMapping("student/date/{birthdate}/{birthdate1}")
   public Flux<Student> findByBirthdateBetween(@PathVariable("birthdate")
-  	@DateTimeFormat(iso = ISO.DATE) Date birthdate,@PathVariable("birthdate1")
-  	@DateTimeFormat(iso = ISO.DATE) Date birthdate1){
-	  return studentRepository.findByBirthdateBetween(birthdate, birthdate1);
+      @DateTimeFormat(iso = ISO.DATE) Date birthdate,@PathVariable("birthdate1")
+      @DateTimeFormat(iso = ISO.DATE) Date birthdate1) {
+    return studentRepository.findByBirthdateBetween(birthdate, birthdate1);
   }
 
 }
