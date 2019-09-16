@@ -21,51 +21,51 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@RestController
+@RestController("/api/student")
 public class StudentController {
 
   @Autowired
   private StudentServiceImpl studentServiceImpl;
   private StudentRepository studentRepository;
     
-  @GetMapping("/student")
+  @GetMapping
   public Flux<Student> findAll() {
     return studentServiceImpl.findAll();
   }
 
-  @GetMapping("/student/{id}")
+  @GetMapping("/{id}")
   public Mono<Student> getStudent(@PathVariable String id) {
     return studentServiceImpl.findById(id);
   }
 
 
-  @GetMapping("student/numberDocument")
+  @GetMapping("/numberDocument")
   public Mono<Student> findByDocument(@RequestParam("number") String numberDocument) {
     return studentServiceImpl.findBynumberDocument(numberDocument);
   }
 
 
-  @GetMapping("student/fullName")
+  @GetMapping("/fullName")
   public Flux<Student> findFullName(@RequestParam("filter") String fullName) {
     return studentServiceImpl.findByFullName(fullName);
   }
   
-  @PostMapping("/student")
+  @PostMapping
   public void create(@RequestBody Student student) {
     studentServiceImpl.create(student);
   }
   
-  @PutMapping("/student")
+  @PutMapping
   public Mono<Student> save(@RequestBody Student student) {
     return studentServiceImpl.save(student);
   }
 
-  @DeleteMapping("/student/{id}")
+  @DeleteMapping("/{id}")
   public void delete(@PathVariable("id") String id) {
     studentServiceImpl.delete(id).subscribe();
   }
   
-  @GetMapping("student/date/{birthdate}/{birthdate1}")
+  @GetMapping("/date/{birthdate}/{birthdate1}")
   public Flux<Student> findByBirthdateBetween(@PathVariable("birthdate")
       @DateTimeFormat(iso = ISO.DATE) Date birthdate,@PathVariable("birthdate1")
       @DateTimeFormat(iso = ISO.DATE) Date birthdate1) {
