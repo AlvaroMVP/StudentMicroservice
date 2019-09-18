@@ -1,7 +1,8 @@
-package com.project.service;
+package com.project.service.impl;
 
 import com.project.model.Student;
 import com.project.repository.StudentRepository;
+import com.project.service.StudentInterface;
 
 import java.util.Date;
 
@@ -16,11 +17,6 @@ public class StudentServiceImpl implements StudentInterface {
 
   @Autowired
   public StudentRepository studentRepository;
-
-  @Override
-  public void create(Student s) {
-    studentRepository.save(s).subscribe();
-  }
 
   @Override
   public Flux<Student> findAll() {
