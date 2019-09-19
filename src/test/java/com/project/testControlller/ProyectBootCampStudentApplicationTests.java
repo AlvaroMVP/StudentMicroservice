@@ -170,5 +170,28 @@ public class ProyectBootCampStudentApplicationTests {
   } 
 
   
+  @Test
+  public void delete() {
+
+    Student parent = studentService.findById("5d832c7aad119347a070e241").block();
+    client
+              .delete()
+              .uri("/api/v1.0" + "/{id}", Collections.singletonMap("id", parent.getId()))
+              .exchange()
+              .expectStatus()
+              .isNoContent()
+              .expectBody()
+              .isEmpty();
+
+    client
+              .get()
+              .uri("/api/v1.0" + "/{id}", Collections.singletonMap("id", parent.getId()))
+              .exchange()
+              .expectStatus()
+              .isNotFound()
+              .expectBody()
+              .isEmpty();
+  }
+
   
 }
