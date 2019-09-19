@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-/** Student test **/
+/* Student test */
 @RunWith(SpringRunner.class)
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -70,10 +70,10 @@ public class ProyectBootCampStudentApplicationTests {
   @Test
   public void findById() {
 
-    Student parent = studentService.findById("432dsffa22").block();
+    Student student = studentService.findById("5d7c0696e7ac942af83bef07").block();
     client
         .get()
-        .uri("/api/v1.0" + "/{id}", Collections.singletonMap("id", parent.getId()))
+        .uri("/api/v1.0/student" + "/{id}", Collections.singletonMap("id", student.getId()))
         .accept(MediaType.APPLICATION_JSON_UTF8)
         .exchange()
         .expectStatus()
@@ -90,72 +90,26 @@ public class ProyectBootCampStudentApplicationTests {
   }
   
   @Test
-  public void findByDocument() {
-
-      Student parent = studentService.findBynumberDocument("84848444").block();
-      client
-              .get()
-              .uri(
-                      "/api/v1.0" + "/document/{document}",
-                      Collections.singletonMap("document", parent.getNumberDocument()))
-              .accept(MediaType.APPLICATION_JSON_UTF8)
-              .exchange()
-              .expectStatus()
-              .isOk()
-              .expectHeader()
-              .contentType(MediaType.APPLICATION_JSON_UTF8)
-              .expectBody(Student.class)
-              .consumeWith(
-                      response -> {
-                          Student p = response.getResponseBody();
-                          Assertions.assertThat(p.getNumberDocument()).isNotEmpty();
-                          Assertions.assertThat(p.getNumberDocument().length() > 0).isTrue();
-                      });
-  }
-  
-  @Test
-  public void findByFullName() {
-
-      Student parent = studentService.findByFullName("Alvaro Valdivia").blockFirst();
-      client
-              .get()
-              .uri("/api/v1.0" + "/name/{name}", Collections.singletonMap("name", parent.getFullName()))
-              .accept(MediaType.APPLICATION_JSON_UTF8)
-              .exchange()
-              .expectStatus()
-              .isOk()
-              .expectHeader()
-              .contentType(MediaType.APPLICATION_JSON_UTF8)
-              .expectBody(Student.class)
-              .consumeWith(
-                      response -> {
-                          Student p = response.getResponseBody();
-                          Assertions.assertThat(p.getFullName()).isNotEmpty();
-                          Assertions.assertThat(p.getFullName().length() > 0).isTrue();
-                      });
-  }
-  
-  @Test
   public void save() {
 
-      Student parent = studentService.findByFullName("Andrea").blockFirst();
+    Student student = studentService.findByFullName("Juan Perez").block();
 
-      Student parentEdit =
+    Student studentEdit =
               new Student(
-                      "432dsffa22",
-                      "Andrea",
-                      "female",
+                      "5d81247b19e5a726d811c93e",
+                      "Juan Perez",
+                      "male",
                       new Date(),
                       "DNI",
-                      "43434343"
+                      "84848444"
                       );
 
-      client
+    client
               .put()
-              .uri("/api/v1.0" + "/{id}", Collections.singletonMap("id", parent.getId()))
+              .uri("/api/v1.0" + "/{id}", Collections.singletonMap("id", student.getId()))
               .contentType(MediaType.APPLICATION_JSON_UTF8)
               .accept(MediaType.APPLICATION_JSON_UTF8)
-              .body(Mono.just(parentEdit), Student.class)
+              .body(Mono.just(studentEdit), Student.class)
               .exchange()
               .expectStatus()
               .isCreated()
@@ -164,16 +118,64 @@ public class ProyectBootCampStudentApplicationTests {
               .expectBody()
               .jsonPath("$.id")
               .isNotEmpty()
-              .jsonPath("$.id")
-              .isEqualTo("432dsffa22");
+              .jsonPath("$.numberDocument")
+              .isEqualTo(84848444);
   }
   
+  @Test
+  public void findByDocument() {
+
+    Student student = studentService.findBynumberDocument("84848444").block();
+    client
+              .get()
+              .uri(
+                      "/api/v1.0" + "/numberDocument/{numberDocument}",
+                      Collections.singletonMap("numberDocument", student.getNumberDocument()))
+              .accept(MediaType.APPLICATION_JSON_UTF8)
+              .exchange()
+              .expectStatus()
+              .isOk()
+              .expectHeader()
+              .contentType(MediaType.APPLICATION_JSON_UTF8)
+              .expectBody(Student.class)
+              .consumeWith(
+                response -> {
+                  Student s = response.getResponseBody();
+                  Assertions.assertThat(s.getNumberDocument()).isNotEmpty();
+                  Assertions.assertThat(s.getNumberDocument().length() > 0).isTrue();
+                });
+  }
+  
+  @Test
+  public void findByFullName() {
+
+    Student parent = studentService.findByFullName("Micaela Rubin").block();
+    client
+              .get()
+              .uri("/api/v1.0" + "/fullName/{fullName}", 
+              Collections.singletonMap("fullName", parent.getFullName()))
+              .accept(MediaType.APPLICATION_JSON_UTF8)
+              .exchange()
+              .expectStatus()
+              .isOk()
+              .expectHeader()
+              .contentType(MediaType.APPLICATION_JSON_UTF8)
+              .expectBody(Student.class)
+              .consumeWith(
+                response -> {
+                  Student p = response.getResponseBody();
+                  Assertions.assertThat(p.getFullName()).isNotEmpty();
+                  Assertions.assertThat(p.getFullName().length() > 0).isTrue();
+                });
+  }
+  
+ 
   
   @Test
   public void delete() {
 
-      Student parent = studentService.findById("929282773").block();
-      client
+    Student parent = studentService.findById("5d832c7aad119347a070e241").block();
+    client
               .delete()
               .uri("/api/v1.0" + "/{id}", Collections.singletonMap("id", parent.getId()))
               .exchange()
@@ -182,7 +184,7 @@ public class ProyectBootCampStudentApplicationTests {
               .expectBody()
               .isEmpty();
 
-      client
+    client
               .get()
               .uri("/api/v1.0" + "/{id}", Collections.singletonMap("id", parent.getId()))
               .exchange()

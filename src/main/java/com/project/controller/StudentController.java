@@ -2,8 +2,7 @@ package com.project.controller;
 
 import com.project.model.Student;
 import com.project.repository.StudentRepository;
-import com.project.service.impl.StudentServiceImpl;
-
+import com.project.service.StudentInterface;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,39 +32,52 @@ import reactor.core.publisher.Mono;
 public class StudentController {
 
   @Autowired
-  private StudentServiceImpl studentServiceImpl;
+  private StudentInterface studentService;
   @Autowired
   private StudentRepository studentRepository;
   
-  
+  /**.
+   * method to list students
+   */
   @GetMapping("/student")
  public Mono<ResponseEntity<Flux<Student>>> findAll() {
     return Mono.just(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8)
-    .body(studentServiceImpl.findAll()));
+    .body(studentService.findAll()));
   }
   
+  /**.
+   * method to search students by id
+   */
   @GetMapping("/student/{id}")
   public Mono<ResponseEntity<Student>> findById(@PathVariable String id) {
-    return studentServiceImpl.findById(id).map(p -> ResponseEntity.ok()
+    return studentService.findById(id).map(p -> ResponseEntity.ok()
     .contentType(MediaType.APPLICATION_JSON_UTF8)
     .body(p)).defaultIfEmpty(ResponseEntity.notFound().build());
   }
 
-
+  /**.
+   * method to search by document number
+   */
   @GetMapping("numberDocument/{numberDocument}")
   public Mono<ResponseEntity<Student>> findBynumberDocument(@PathVariable String numberDocument) {
-    return studentServiceImpl.findBynumberDocument(numberDocument)
+    return studentService.findBynumberDocument(numberDocument)
     .map(p -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(p))
     .defaultIfEmpty(ResponseEntity.notFound().build());
   }
   
+  /**.
+   * method to search by full name
+   */
   @GetMapping("fullName/{fullName}")
-  public Flux<ResponseEntity<Student>> findFullName(@PathVariable String fullName) {
-    return studentServiceImpl.findByFullName(fullName).map(s -> ResponseEntity.ok()
-    .contentType(MediaType.APPLICATION_JSON_UTF8).body(s))
+  public Mono<ResponseEntity<Student>> findFullName(@PathVariable String fullName) {
+    return studentService.findByFullName(fullName).map(p -> ResponseEntity.ok()
+    .contentType(MediaType.APPLICATION_JSON_UTF8).body(p))
     .defaultIfEmpty(ResponseEntity.notFound().build());
   }
   
+  /**.
+   * method to create
+   */
   @PostMapping
   public Mono<ResponseEntity<Map<String, Object>>> create(
       @Valid @RequestBody Mono<Student> studentMono) {
@@ -74,7 +86,7 @@ public class StudentController {
       if (student.getBirthdate() == null) {
         student.setBirthdate(new Date());
       }
-      return studentServiceImpl.save(student).map(
+      return studentService.save(student).map(
         p -> {
           reply.put("student", p);
           reply.put("message", "Student created successfully");
@@ -85,9 +97,12 @@ public class StudentController {
     });
   }
   
+  /**.
+   * method to update a student
+   */
   @PutMapping("/{id}")
   public Mono<ResponseEntity<Student>> save(@RequestBody Student student,@PathVariable String id) {
-    return studentServiceImpl.findById(id).flatMap(
+    return studentService.findById(id).flatMap(
       s -> {
         s.setFullName(student.getFullName());
         s.setGender(student.getGender());
@@ -95,19 +110,25 @@ public class StudentController {
         s.setTypeDocument(student.getTypeDocument());
         s.setNumberDocument(student.getNumberDocument());
     
-        return studentServiceImpl.save(s);
+        return studentService.save(s);
       }).map(
           s -> ResponseEntity.created(
          URI.create("/api/v1.0".concat(s.getId())))
 .contentType(MediaType.APPLICATION_JSON_UTF8).body(s)).defaultIfEmpty(ResponseEntity
 .notFound().build());
   }
-
+  
+  /**.
+   * method to delete a student by id
+   */
   @DeleteMapping("/{id}")
   public void delete(@PathVariable("id") String id) {
-    studentServiceImpl.delete(id).subscribe();
+    studentService.delete(id).subscribe();
   }
   
+  /**.
+   * method to search by dates
+   */
   @GetMapping("student/date/{birthdate}/{birthdate1}")
   public Flux<Student> findByBirthdateBetween(@PathVariable("birthdate")
       @DateTimeFormat(iso = ISO.DATE) Date birthdate,@PathVariable("birthdate1")

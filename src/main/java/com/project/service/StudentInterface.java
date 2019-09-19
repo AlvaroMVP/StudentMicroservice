@@ -8,12 +8,12 @@ import reactor.core.publisher.Mono;
 public interface StudentInterface {
 
   public Flux<Student> findAll();
-  
-  public Flux<Student> findByFullName(String fullName);
-  
+    
   public Flux<Student> findByDate(String birthdate);
   
   public Flux<Student> findByBirthdateBetween(Date birthdate, Date birthdate1);
+  
+  public Mono<Student> findByFullName(String fullName);
    
   public Mono<Student> findBynumberDocument(String numberDocument);
    

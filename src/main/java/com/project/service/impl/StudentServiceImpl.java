@@ -24,7 +24,7 @@ public class StudentServiceImpl implements StudentInterface {
   }
 
   @Override
-  public Flux<Student> findByFullName(String fullName) {
+  public Mono<Student> findByFullName(String fullName) {
     return studentRepository.findByFullName(fullName);
   }
 

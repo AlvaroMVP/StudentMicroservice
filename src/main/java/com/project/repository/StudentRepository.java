@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 public interface StudentRepository extends ReactiveMongoRepository<Student, String> {
 
-  Flux<Student> findByFullName(String fullName);
+  Mono<Student> findByFullName(String fullName);
   
   Mono<Student> findBynumberDocument(String numberDocument);
   
