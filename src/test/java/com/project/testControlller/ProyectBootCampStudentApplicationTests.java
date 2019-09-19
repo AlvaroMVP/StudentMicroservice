@@ -1,4 +1,4 @@
-package com.project;
+package com.project.testControlller;
 
 import com.project.model.Student;
 
@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-/* Student test */
+/* Student test controller*/
 @RunWith(SpringRunner.class)
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
