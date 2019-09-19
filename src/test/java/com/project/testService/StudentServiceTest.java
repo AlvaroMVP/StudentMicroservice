@@ -135,10 +135,6 @@ public class StudentServiceTest {
             .create(publisher)
             .expectNext(expectedProducts)
             .verifyComplete();
-    }
-	
-	
-	
-	
+    }	
 	
 }
